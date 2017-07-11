@@ -1,0 +1,163 @@
+{
+  "Projects": {
+    "Lithium": {
+      "NAPIERV1": {
+        "projectName"                   : "napier1p0",
+        "PRJ_BRANCH"                    : "NAPIER_v1p0",
+        "DEPOT"                         : "lithium_napier_1.0",
+        "BL_INFO_FILE_FULL"             : "input/NAPIER_v1p0/p4_reg_full_Book_keeping.txt",
+        "P4_REG_INPUT_FILE_FULL"        : "p4_reg_full_input.txt",
+        "BL_INFO_FILE_MINI"             : "input/NAPIER_v1p0/lithium_reg_book_keepings.txt",
+        "P4_REG_INPUT_FILE_MINI"        : "lithium_reg_input.txt",
+        "VerifLabelRegDiffHtmlFilename" : "diff_regVerif_NapierV1.html",
+        "VerifLabelDiffDBTable"         : "diffRegressionVerifLabelNAPIER_v1p0",
+        "DesignToVerifLabelDiffHtmlFile": "versiondiff_output.html",
+        "DesignToVerifLabelDiffDBTable" : "LithiumNapier_DesignToVerif_LabelDiffNAPIER_v1p0",
+        "DBTables": {
+          "MINI"                        : "regression_Lithium_NAPIER_v1p0_mini",
+          "FULL"                        : "regression_Lithium_NAPIER_v1p0_full"
+        }
+      },
+      "HAWKEYEV1": {
+        "projectName"                   : "hawkeye1p0",
+        "PRJ_BRANCH"                    : "HAWKEYE_v1p0",
+        "DEPOT"                         : "lithium_hk_1.0",
+        "BL_INFO_FILE_FULL"             : "input/HAWKEYE_v1p0/p4_reg_full_Book_keeping.txt",
+        "P4_REG_INPUT_FILE_FULL"        : "input/HAWKEYE_v1p0/p4_reg_full_input.txt",
+        "BL_INFO_FILE_MINI"             : "input/HAWKEYE_v1p0/lithium_reg_book_keepings.txt",
+        "P4_REG_INPUT_FILE_MINI"        : "input/HAWKEYE_v1p0/lithium_reg_input.txt",
+        "VerifLabelRegDiffHtmlFilename" : "diff_regVerif_HawkeyeV1.html",
+        "DesignToVerifLabelDiffHtmlFile": "",
+        "VerifLabelDiffDBTable"         : "",
+        "DesignToVerifLabelDiffDBTable" : "",
+        "DBTables": {
+          "MINI"                        : "regression_Lithium_HAWKEYE_v1p0_mini",
+          "FULL"                        : "regression_Lithium_HAWKEYE_v1p0_full"
+        }
+      },
+      "NAPIER": {
+        "projectName"                   : "napier",
+        "PRJ_BRANCH"                    : "",
+        "DEPOT"                         : "lithium",
+        "BL_INFO_FILE_FULL"             : "p4_reg_full_Book_keeping.txt",
+        "P4_REG_INPUT_FILE_FULL"        : "p4_reg_full_input.txt",
+        "BL_INFO_FILE_MINI"             : "lithium_reg_book_keepings.txt",
+        "P4_REG_INPUT_FILE_MINI"        : "lithium_reg_input.txt",
+        "VerifLabelRegDiffHtmlFilename" : "diff_regVerif_Napier.html",
+        "VerifLabelDiffDBTable"         : "diffRegressionVerifLabel",
+        "DesignToVerifLabelDiffHtmlFile": "versiondiff_output.html",
+        "DesignToVerifLabelDiffDBTable" : "LithiumNapier_DesignToVerif_LabelDiff",
+        "DBTables": {
+          "MINI"                        : "regression_Lithium_mini",
+          "FULL"                        : "regression_lithium_full"
+        }
+      },
+      "HAWKEYE": {
+        "projectName"                   : "hawkeye",
+        "PRJ_BRANCH"                    : "",
+        "DEPOT"                         : "lithium_hk_1.0",
+        "BL_INFO_FILE_FULL"             : "p4_reg_full_Book_keeping.txt",
+        "P4_REG_INPUT_FILE_FULL"        : "p4_reg_full_input.txt",
+        "BL_INFO_FILE_MINI"             : "lithium_reg_book_keepings.txt",
+        "P4_REG_INPUT_FILE_MINI"        : "lithium_reg_input.txt",
+        "VerifLabelRegDiffHtmlFilename" : "diff_regVerif_Hawkeye.html",
+        "VerifLabelDiffDBTable"         : "",
+        "DesignToVerifLabelDiffHtmlFile": "",
+        "DesignToVerifLabelDiffDBTable" : "",
+        "DBTables": {
+          "MINI"                        : "regression_Lithium_mini",
+          "FULL"                        : "regression_lithium_full"
+        }
+      }
+    }
+  },
+  "SqlQueryCollection": {
+    "ConsecutiveFails": "\nSELECT TOP({num}) Regression_name,Reg_result,Date \n  FROM dbo.regression_Lithium_mini \n  WHERE Block = '{blk}' \n  ORDER BY Date DESC",
+    "ConsecutiveLabelFails": "\nSELECT Block,Regression_name,Reg_result,Timestamp \n  FROM dbo.{table} \n  WHERE Block = '{blk}' \n",
+    "DistinctRegressionName": "\nSELECT DISTINCT Regression_name \n  FROM dbo.{table} \n  WHERE Block = '{blk}'",
+    "HawkeyeBlocks": "\nselect distinct Block \n from dbo.{table} \n where Block not like '%_NAPIER' \n order by Block ASC",
+    "NapierBlocks": "\nselect distinct Block \n from dbo.{table} \n where Block like '%_NAPIER' \n order by Block ASC",
+    "OrderedDistinctRegResults": "with c as \n (select distinct top({num}) Regression_name,\n cast(substring(Regression_name, CHARINDEX('#',Regression_name,0)+1, 100) as int) as Label, Block \n from dbo.{table} \n where block like '{blk}'\n order by Label DESC)\n select t.Block, t.Regression_name, t.Reg_result, t.Timestamp\n from dbo.{table} t\n inner join c \n on t.Regression_name = c.Regression_name and t.Block = c.Block\n order by c.Label DESC",
+    "OrderedDistinctRegResults2": "with c as \n (select distinct top({num}) Regression_name,\n cast(substring(Regression_name, CHARINDEX('#',Regression_name,0)+1, 100) as int) as Label, Block \n from dbo.{table} \n where block like '{blk}'\n order by Label DESC)\n select t.Block, t.Regression_name, t.Reg_result, t.TotalTC, PassRate, t.Timestamp\n from dbo.{table} t\n inner join c \n on t.Regression_name = c.Regression_name and t.Block = c.Block\n order by c.Label DESC, t.Timestamp ASC",
+    "SelectLastXDays": "select Block,Regression_name,Date from dbo.{table} \n where Date >= dateadd(Day,-{num},getdate()) \n and block = '{blk}' \n order by Date DESC",
+    "TopXRegNames": "SELECT TOP(3) Block,Regression_name \n FROM dbo.{table} \n WHERE Block = '{blk}' \n ORDER BY cast(substring(Regression_name, CHARINDEX('#',Regression_name,0)+1, 100) as int) DESC"
+  },
+  "P4Labels_NAPIER": {
+    "CCE_NAPIER"            : "@lithium_wcss_core_cce_napier_label_recommended",
+    "CE_NAPIER"             : "@lithium_wcss_core_ce_napier_label_recommended",
+    "CRYPTO_NAPIER"         : "@lithium_wcss_core_crypto_napier_label_recommended",
+    "CXC_NAPIER"            : "@lithium_wcss_core_cxc_napier_label_recommended",
+    "GSE_NAPIER"            : "@lithium_wcss_core_gse_napier_label_recommended",
+    "GXI_NAPIER"            : "@lithium_wcss_core_gxi_napier_label_recommended",
+    "HWSCH_NAPIER"          : "@lithium_wcss_core_hwsch_napier_label_recommended",
+    "LMAC_NON_LITE_NAPIER"  : "@lithium_wcss_core_lmac_non_lite_napier_label_recommended",
+    "LPEC_NAPIER"           : "@lithium_wcss_core_lpec_napier_label_recommended",
+    "PDG_NAPIER"            : "@lithium_wcss_core_pdg_napier_label_recommended",
+    "REO_NAPIER"            : "@lithium_wcss_core_reo_napier_label_recommended",
+    "RRI_NAPIER"            : "@lithium_wcss_core_rri_napier_label_recommended",
+    "RXDMA_NAPIER"          : "@lithium_wcss_core_rxdma_napier_label_recommended",
+    "RXOLE_NAPIER"          : "@lithium_wcss_core_rxole_napier_label_recommended",
+    "RXPCU_NAPIER"          : "@lithium_wcss_core_rxpcu_napier_label_recommended",
+    "SFM_NAPIER"            : "@lithium_wcss_core_sfm_napier_label_recommended",
+    "TCL_NAPIER"            : "@lithium_wcss_core_tcl_napier_label_recommended",
+    "TQM_NAPIER"            : "@lithium_wcss_core_tqm_napier_label_recommended",
+    "TXDMA_NAPIER"          : "@lithium_wcss_core_txdma_napier_label_recommended",
+    "TXOLE_NAPIER"          : "@lithium_wcss_core_txole_napier_label_recommended",
+    "TXPCU_NAPIER"          : "@lithium_wcss_core_txpcu_napier_label_recommended",
+    "UMAC_NAPIER"           : "@lithium_wcss_core_umac_napier_label_recommended",
+    "UMAC_NON_LITE_NAPIER"  : "@lithium_wcss_core_umac_non_lite_napier_label_recommended",
+    "WBM_NAPIER"            : "@lithium_wcss_core_wbm_napier_label_recommended"
+  },
+  "XP4Labels_NAPIER": {
+    "CXC_NAPIER"            : "@lithium_wcss_core_cxc_napier_label_recommended"
+  },
+  "P4Labels_HAWKEYE": {
+    "CCE"            : "@lithium_wcss_core_cce_label_recommended",
+    "CE"             : "@lithium_wcss_core_ce_label_recommended",
+    "CRYPTO"         : "@lithium_wcss_core_crypto_label_recommended",
+    "CXC"            : "@lithium_wcss_core_cxc_label_recommended",
+    "GSE"            : "@lithium_wcss_core_gse_label_recommended",
+    "GXI"            : "@lithium_wcss_core_gxi_label_recommended",
+    "HWSCH"          : "@lithium_wcss_core_hwsch_label_recommended",
+    "PDG"            : "@lithium_wcss_core_pdg_label_recommended",
+    "REO"            : "@lithium_wcss_core_reo_label_recommended",
+    "RRI"            : "@lithium_wcss_core_rri_label_recommended",
+    "RXDMA"          : "@lithium_wcss_core_rxdma_label_recommended",
+    "RXOLE"          : "@lithium_wcss_core_rxole_label_recommended",
+    "RXPCU"          : "@lithium_wcss_core_rxpcu_label_recommended",
+    "SFM"            : "@lithium_wcss_core_sfm_label_recommended",
+    "TCL"            : "@lithium_wcss_core_tcl_label_recommended",
+    "TQM"            : "@lithium_wcss_core_tqm_label_recommended",
+    "TXDMA"          : "@lithium_wcss_core_txdma_label_recommended",
+    "TXOLE"          : "@lithium_wcss_core_txole_label_recommended",
+    "TXPCU"          : "@lithium_wcss_core_txpcu_label_recommended",
+    "UMAC"           : "@lithium_wcss_core_umac_label_recommended",
+    "WBM"            : "@lithium_wcss_core_wbm_label_recommended"
+  },
+  "BlockOwnersEmailAddr": {
+    "CCE"   : "a@qti.qualcomm.com, y@qti.qualcomm.com",
+    "CE"    : "b@qti.qualcomm.com",
+    "CMEM"  : "c@qti.qualcomm.com",
+    "CRYPTO": "d@qti.qualcomm.com",
+    "CXC"   : "e@qti.qualcomm.com, z@qti.qualcomm.com",
+    "GSE"   : "f@qti.qualcomm.com",
+    "GXI"   : "g@qti.qualcomm.com",
+    "HWSCH" : "h@qti.qualcomm.com, y@qti.qualcomm.com, z@qti.qualcomm.com",
+    "LMAC"  : "i@qti.qualcomm.com",
+    "LPEC"  : "j@qti.qualcomm.com",
+    "PDG"   : "k@qti.qualcomm.com, y@qti.qualcomm.com",
+    "REO"   : "l@qti.qualcomm.com",
+    "RRI"   : "m@qti.qualcomm.com",
+    "RXDMA" : "n@qti.qualcomm.com, z@qti.qualcomm.com",
+    "RXOLE" : "o@qti.qualcomm.com, y@qti.qualcomm.com",
+    "RXPCU" : "p@qti.qualcomm.com, z@qti.qualcomm.com, y@qti.qualcomm.com",
+    "SFM"   : "q@qti.qualcomm.com",
+    "TCL"   : "r@qti.qualcomm.com, z@qti.qualcomm.com",
+    "TQM"   : "s@qti.qualcomm.com",
+    "TXDMA" : "t@qti.qualcomm.com",
+    "TXOLE" : "u@qti.qualcomm.com, y@qti.qualcomm.com",
+    "TXPCU" : "v@qti.qualcomm.com, z@qti.qualcomm.com",
+    "UMAC"  : "w@qti.qualcomm.com, y@qti.qualcomm.com",
+    "WBM"   : "x@qti.qualcomm.com, z@qti.qualcomm.com"
+  }
+}
