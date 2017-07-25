@@ -87,9 +87,10 @@ def createAndSendEmailFull(x):
 def createAndSendEmail(y, msgSubj):
     if DEBUG: print ("\n\tInside function 'createAndSendEmail' of ", __name__)
     MsgHTML = createHTML(y)
-    blk_email_key = y.blockname.upper().split('_')[0]
+    blk_email_key = y.blockname.upper().split('_')[0]#Remove napier from block name to index json key
     try:
         recips = JsonObj['BlockOwnersEmailAddr'][blk_email_key]
+        recips = recips.replace(';',',')#Using semicolon so I can copy/paste to outlook email, convienence
         recips += ", " + emailCarbonCopy
         recips = recips.split(', ')
     except KeyError as e:
@@ -107,6 +108,5 @@ def createAndSendEmail(y, msgSubj):
         myUtils.sendEmail(recips, msgSubj, MsgHTML)
     #
     ####
-
 
 
